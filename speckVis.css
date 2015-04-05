@@ -1,0 +1,33 @@
+#sidebar {
+  position:absolute;
+  background-color: #fdfdfd;
+  top:20px;  /* adjust value accordingly */
+  left: 20px;  /* adjust value accordingly */
+  height: 420px;
+  width: 280px;
+  box-shadow: 2px 2px 2px #888888;
+}
+
+.lead {
+	margin-top: 10px;
+	text-align: center;
+}
+
+#colorKey img{
+	margin-left: 40px;
+	margin-top: 25px;
+}
+
+#locationBar {
+	margin-left: 20px;
+}
+
+#location {
+	width: 190px;
+	float: left;
+}
+
+.btn {
+	float: right;
+	margin-right: 15px;
+}

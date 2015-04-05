@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="js/jQuery.js"></script>
+	    <script type="text/javascript"
+	      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6UoYEETdTY7HuLZbQNlFvGyqXUuPkp7E">
+	    </script>
+	    <!--Bootstrap core JS -->
+	    <script src="static/dist/js/bootstrap.min.js"></script>
+	    <!-- Bootstrap core CSS -->
+	    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
+	    <link rel="stylesheet" href="speckVis.css">
+	</head>
+
+	<div id="map-canvas"></div>
+	<div id="sidebar">
+		<div class="lead">Speck Maps Visualization</div>
+		<div class="form-group" id="locationBar">
+			<label for="location">Location</label><br>
+			<input type="text" class="form-control" id="location" name="location" 
+				placeholder="Enter address or zip code">
+			<button class="btn btn-success" onclick="updateLocation()">Go</button>
+		</div>
+		<div id="colorKey">
+			<img src="static/colorKey.svg">
+		</div>
+	</div>
+
+	<style type="text/css">
+	      html, body, #map-canvas { height: 100%; width: 100%;}
+	      body { margin: 0px;}
+    </style>
+
+</html>
+
+<script type="text/javascript">
+
+	//Disabling .getJSON's asynchronous behavior so that variables can be
+	//accessed outside the getJSON function
+	$.ajaxSetup({
+	   async: false
+	});
+
+	var id;
+	var latitude;
+	var longitude;
+	var userLatitude;
+	var userLongitude;
+	var maxTime;
+	var name;
+	var PM2_5value;
+	var link;
+	var feedData;
+	var sensors;
+	var ESDR_root = "https://esdr.cmucreatelab.org/api/v1/feeds/";
+	var geocoding_root = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+	var map;
+
+	//Plot lat-long on the map (uses Google Maps API)
+	function initialize() {
+
+		//Geolocation using HTML5
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition);
+		} else {
+			alert("Your browser doesn't support geolocation.");
+		}
+
+		//Setting the map's center to the user's location
+		function showPosition(position) {
+			userLatitude = position.coords.latitude;
+			userLongitude = position.coords.longitude;
+			var userLocation = new google.maps.LatLng(userLatitude, userLongitude);
+			map.setCenter(userLocation);
+
+			//Gets array of nearby sensors with air quality data
+			sensors = findNearbySensors(userLatitude, userLongitude);
+
+			for (i = 0; i <= Object.keys(sensors).length - 1; i++) {
+				//Only place marker if all the values are not null
+				if (sensors[i]["latitude"] && sensors[i]["longitude"] && sensors[i]["PM2_5value"]) {
+					var latLng = new google.maps.LatLng(sensors[i]["latitude"], sensors[i]["longitude"]);
+					var marker = new google.maps.Marker({
+						position: latLng,
+						icon: {
+					      path: google.maps.SymbolPath.CIRCLE,
+					      fillOpacity: 0.9,
+					      fillColor: getMarkerColor(sensors[i]["PM2_5value"]),
+					      strokeWeight: 1.5,
+					      strokeColor: "#000000",
+					      scale: 12,
+					    },
+						map: map
+					});
+
+					var infowindow = new google.maps.InfoWindow();
+					attachInfoWindow(marker, i);
+
+					//Creates a new info window for each event
+					function attachInfoWindow(marker, i) {
+						google.maps.event.addListener(marker, 'click', function() {
+							var contentString = "<h2>Air Quality Summary</h2>"
+												+ "<div style=\"font-size:16px; line-height: 30px\">"
+												+ "<b>Station Name: </b>" + sensors[i]["name"] 
+												+ "<br><b>PM 2.5 Value: </b>" + sensors[i]["PM2_5value"]
+												+ "<br><b>Quality: </b>"+ getMarkerStatus(sensors[i]["PM2_5value"])
+												+ "</div>";
+							infowindow.setOptions({
+								content: contentString,
+							});
+							infowindow.open(marker.get('map'), marker);
+						});
+					}
+				}
+			}
+
+			//Placing user's current location marker on the map
+			var marker2 = new google.maps.Marker({
+				position: userLocation,
+				icon: {
+			      path: google.maps.SymbolPath.CIRCLE,
+			      fillOpacity: 0.9,
+			      fillColor: markerColors.userLocation,
+			      strokeWeight: 1.5,
+			      strokeColor: "#000000",
+			      scale: 12,
+			    },
+				map: map
+			});
+
+			//Info window that displays user location window
+			var infowindow2 = new google.maps.InfoWindow({
+			      content: "<h3>My Location</h3"
+			});
+
+			//Opens info window on click
+			google.maps.event.addListener(marker2, 'click', function() {
+			    infowindow2.open(map,marker2);
+			});
+
+			//Placing user's current location marker on the map
+			var marker2 = new google.maps.Marker({
+				position: userLocation,
+				icon: {
+			      path: google.maps.SymbolPath.CIRCLE,
+			      fillOpacity: 0.9,
+			      fillColor: markerColors.userLocation,
+			      strokeWeight: 1.5,
+			      strokeColor: "#000000",
+			      scale: 12,
+			    },
+				map: map
+			});
+
+			//Info window that displays user location window
+			var infowindow2 = new google.maps.InfoWindow({
+			      content: "<h3>My Location</h3"
+			});
+
+			//Opens info window on click
+			google.maps.event.addListener(marker2, 'click', function() {
+			    infowindow2.open(map,marker2);
+			});
+		}
+		var mapOptions = {
+		  zoom: 9
+		};
+		map = new google.maps.Map(document.getElementById('map-canvas'),
+				    mapOptions);
+
+	}
+	
+	//Loads Google Maps asynchronously
+	function loadScript() {
+	  var script = document.createElement('script');
+	  script.type = 'text/javascript';
+	  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp' +
+	      '&signed_in=true&callback=initialize';
+	  document.body.appendChild(script);
+	}
+
+	window.onload = loadScript;
+
+	//Colors of the PM 2.5 levels
+	var markerColors = {
+		good: "#199A51",
+		moderate: "#92CA61",
+		slightly_elevated: "#D8E58D",
+		elevated: "#FCE08A",
+		high: "#F68C5B",
+		very_high: "#D93027",
+		userLocation: "#4BB2FE",
+		none: "#dddddd"
+	};
+
+	function getMarkerStatus(value) {
+		if (value <= 12) {
+			return "Good";
+		} else if (value <= 35.4) {
+			return "Moderate";
+		} else if (value <= 55.4) {
+			return "Slightly Elevated";
+		} else if (value <= 150.4) {
+			return "Elevated";
+		} else if (value <= 250.4) {
+			return "High";
+		} else if (value <= 500.4) {
+			return "Very High";
+		} else {
+			return "None";
+		}
+	} 
+
+	//Assigns PM 2.5 color codes taken from
+	//http://airnow.gov/index.cfm?action=aqibasics.aqi
+	function getMarkerColor(value) {
+		if (value <= 12) {
+			return markerColors.good;
+		} else if (value <= 35.4) {
+			return markerColors.moderate;
+		} else if (value <= 55.4) {
+			return markerColors.slightly_elevated;
+		} else if (value <= 150.4) {
+			return markerColors.elevated;
+		} else if (value <= 250.4) {
+			return markerColors.high;
+		} else if (value <= 500.4) {
+			return markerColors.very_high;
+		} else {
+			return markerColors.none;
+		}
+	}
+
+	//Use haversine formula to calculate new lat-long coordinates
+	function haversineNewCoords(lat1, long1, distance, bearing) {
+		//Converting the inputs to radians for use in the Haversine formula
+		//Converting distances from km to meters
+		var lat1 = lat1 * (Math.PI / 180);
+		var long1 = long1 * (Math.PI / 180);
+		var bearing = bearing * (Math.PI / 180);
+		var distance = distance * 1000
+		var earthRadius = 6371000
+
+		//Haversine formula calculations
+		//Taken from: http://www.movable-type.co.uk/scripts/latlong.html
+		var newlat = (Math.asin(Math.sin(lat1)*Math.cos(distance/earthRadius) 
+						+ Math.cos(lat1)*Math.sin(distance/earthRadius)*Math.cos(bearing))) * (180 / Math.PI);
+		
+		var newlong = (long1 + Math.atan2(Math.sin(bearing)*Math.sin(distance/earthRadius)*Math.cos(lat1),
+                         Math.cos(distance/earthRadius)-Math.sin(lat1)*Math.sin(newlat))) * (180 / Math.PI);
+
+		var coords = [newlat, newlong];
+		return coords;
+	}
+
+	function getPM2_5Value(link, maxTime, pollutant) {
+		//Gets the last recorded PM2_5 reading from the sensor
+		//Links to the PM2_5 reading (csv file)
+
+		var PM2_5link = link + "/channels/" + pollutant + "/export?from=" + maxTime + "&to=" + maxTime;
+
+		//Gets csv text from ESDR
+	    $.ajax({
+	        type: "GET",
+	        url: PM2_5link,
+	        dataType: "text",
+	        success: function(data) {processData(data);}
+	     });
+
+	    //Parse the last PM2_5 value from the csv file 
+		function processData(allText) {
+		    var allTextLines = allText.split(/\r\n|\n/);
+		    var lastLine = allTextLines[allTextLines.length-2];
+		    var lastValue = lastLine.split(',')
+		    PM2_5value = Number(lastValue[1]);
+		}
+
+		return PM2_5value;
+	}
+
+	//Add nearby sensors to the sensor array
+	//Creates an array of objects that represents feeds 
+	//within 100 square km of userlocation
+	function findNearbySensors(userLatitude, userLongitude) {
+		//Distance in kilometers (preset to 50km)
+		var distance = 100;
+		var sensors = [];
+
+		//Create a rectangular grid to constrain the feeds using 
+		//Haversine formula
+
+		//-------------------------* (maxLatitude, maxLongitude)
+		//|						   |
+		//|						   |
+		//|			 user		   |							
+		//|						   |
+		//|						   |
+		//|________________________|
+		//*
+		// (minLatitude, minLongitude)
+
+		//Bottom-left corner of the rectangle grid
+		var minLatitude = haversineNewCoords(userLatitude, userLongitude, distance, 225)[0];
+		var minLongitude = haversineNewCoords(userLatitude, userLongitude, distance, 225)[1];
+
+		//Top-right corner of the rectangle grid
+		var maxLatitude = haversineNewCoords(userLatitude, userLongitude, distance, 45)[0];
+		var maxLongitude = haversineNewCoords(userLatitude, userLongitude, distance, 45)[1];
+
+		var constrainedFeedLink = ESDR_root + "?where=latitude>" + minLatitude + ",latitude<" + maxLatitude 
+									+ ",longitude>" + minLongitude + ",longitude<" + maxLongitude
+									+ "&fields=id,latitude,longitude,maxTimeSecs,name,channelBounds";
+
+		//Goes through each feed in the constrained link
+		//Gets the latitude, longitude, PM2_5 of the sensors
+		//Returns a final sensor array containing air quality data from nearby sensors
+		$.getJSON(constrainedFeedLink, function(json) {
+			var length = json["data"]["rows"].length;
+
+			for (k = 0; k < length; k++) {
+				id = json["data"]["rows"][k]["id"];
+				name = json["data"]["rows"][k]["name"];
+				latitude = json["data"]["rows"][k]["latitude"];
+				longitude = json["data"]["rows"][k]["longitude"];
+				maxTime = json["data"]["rows"][k]["maxTimeSecs"];
+
+				link = ESDR_root + id;
+
+				//Only fetches data if PM2_5 feed is available, makes
+				//the program a lot more efficient
+				if ((json["data"]["rows"][k]["channelBounds"]) &&
+					(json["data"]["rows"][k]["channelBounds"]["channels"]["PM2_5"] 
+					|| (json["data"]["rows"][k]["channelBounds"]["channels"]["pm2_5"]))) {
+
+					feedData = {
+						"name": name,
+						"latitude": latitude,
+						"longitude": longitude,
+						"PM2_5value": getPM2_5Value(link, maxTime, "PM2_5")
+					};
+					
+					if (!feedData["PM2_5value"]) {
+						feedData["PM2_5value"] = getPM2_5Value(link, maxTime, "pm2_5");
+					}
+
+				sensors.push(feedData);
+				}
+			}
+		});
+
+		return sensors;
+	}
+
+	//Updates the current location and finds new nearby markers when user
+	//enters a new address (using Google Maps geocoding)
+	function updateLocation() {
+		//Fetching the address input
+		var newAddress = document.getElementById("location").value;
+		document.getElementById("location").placeholder = newAddress;
+		var geocoding_url = geocoding_root + newAddress;
+
+		//Identifying the lat/long of the new address using server-side geocoding
+		//Read details here: https://developers.google.com/maps/articles/geocodestrat
+		$.getJSON(geocoding_url, function(geocode) {
+			var newLatitude = geocode["results"][0]["geometry"]["location"]["lat"];
+			var newLongitude = geocode["results"][0]["geometry"]["location"]["lng"];
+			userLatitude = newLatitude;
+			userLongitude = newLongitude;
+
+			var userLocation = new google.maps.LatLng(userLatitude, userLongitude);
+			map.setCenter(userLocation);
+
+			//Gets array of nearby sensors with air quality data
+			sensors = findNearbySensors(userLatitude, userLongitude);
+
+			for (i = 0; i <= Object.keys(sensors).length - 1; i++) {
+				//Only place marker if all the values are not null
+				if (sensors[i]["latitude"] && sensors[i]["longitude"] && sensors[i]["PM2_5value"]) {
+					var latLng = new google.maps.LatLng(sensors[i]["latitude"], sensors[i]["longitude"]);
+					var marker = new google.maps.Marker({
+						position: latLng,
+						icon: {
+					      path: google.maps.SymbolPath.CIRCLE,
+					      fillOpacity: 0.9,
+					      fillColor: getMarkerColor(sensors[i]["PM2_5value"]),
+					      strokeWeight: 1.5,
+					      strokeColor: "#000000",
+					      scale: 12,
+					    },
+						map: map
+					});
+
+					var infowindow = new google.maps.InfoWindow();
+					attachInfoWindow(marker, i);
+
+					//Creates a new info window for each event
+					function attachInfoWindow(marker, i) {
+						google.maps.event.addListener(marker, 'click', function() {
+							var contentString = "<h2>Air Quality Summary</h2>"
+												+ "<div style=\"font-size:16px; line-height: 30px\">"
+												+ "<b>Station Name: </b>" + sensors[i]["name"] 
+												+ "<br><b>PM 2.5 Value: </b>" + sensors[i]["PM2_5value"]
+												+ "<br><b>Quality: </b>"+ getMarkerStatus(sensors[i]["PM2_5value"])
+												+ "</div>";
+							infowindow.setOptions({
+								content: contentString,
+							});
+							infowindow.open(marker.get('map'), marker);
+						});
+					}
+				}
+			}
+
+			//Placing user's current location marker on the map
+			var marker2 = new google.maps.Marker({
+				position: userLocation,
+				icon: {
+			      path: google.maps.SymbolPath.CIRCLE,
+			      fillOpacity: 0.9,
+			      fillColor: markerColors.userLocation,
+			      strokeWeight: 1.5,
+			      strokeColor: "#000000",
+			      scale: 12,
+			    },
+				map: map
+			});
+
+			//Info window that displays user location window
+			var infowindow2 = new google.maps.InfoWindow({
+			      content: "<h3>My Location</h3"
+			});
+
+			//Opens info window on click
+			google.maps.event.addListener(marker2, 'click', function() {
+			    infowindow2.open(map,marker2);
+			});
+
+			//Placing user's current location marker on the map
+			var marker2 = new google.maps.Marker({
+				position: userLocation,
+				icon: {
+			      path: google.maps.SymbolPath.CIRCLE,
+			      fillOpacity: 0.9,
+			      fillColor: markerColors.userLocation,
+			      strokeWeight: 1.5,
+			      strokeColor: "#000000",
+			      scale: 12,
+			    },
+				map: map
+			});
+
+			//Info window that displays user location window
+			var infowindow2 = new google.maps.InfoWindow({
+			      content: "<h3>My Location</h3"
+			});
+
+			//Opens info window on click
+			google.maps.event.addListener(marker2, 'click', function() {
+			    infowindow2.open(map,marker2);
+			});
+			var mapOptions = {
+			  zoom: 9
+			};
+		});
+	}
+
+</script>
