@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="165px" height="258px" viewBox="0 0 165 258" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+<svg width="163px" height="294px" viewBox="0 0 163 294" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
     <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
     <title>Color Key</title>
     <desc>Created with Sketch.</desc>
@@ -58,34 +58,48 @@
                 <feMergeNode in="SourceGraphic"></feMergeNode>
             </feMerge>
         </filter>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-7">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.35 0" in="shadowBlurOuter1" type="matrix" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Color-Key" sketch:type="MSLayerGroup" transform="translate(-26.000000, -2.000000)">
-            <rect id="Rectangle-1" sketch:type="MSShapeGroup" x="0" y="0" width="210" height="269"></rect>
-            <path d="M30.2605824,243.676172 L30.24,243.676172 L30.24,19.4026758 L30.3227683,19.4026758 C30.2680507,18.8743273 30.24,18.3379628 30.24,17.7949805 C30.24,9.35987724 37.0094546,2.521875 45.36,2.521875 C53.7105454,2.521875 60.48,9.35987724 60.48,17.7949805 C60.48,18.3379628 60.4519493,18.8743273 60.3972317,19.4026758 L60.3972317,19.4026758 L60.48,19.4026758 L60.48,243.676172 L60.4594176,243.676172 C60.4730827,243.942375 60.48,244.210381 60.48,244.48002 C60.48,252.915123 53.7105454,259.753125 45.36,259.753125 C37.0094546,259.753125 30.24,252.915123 30.24,244.48002 C30.24,244.210381 30.2469173,243.942375 30.2605824,243.676172 Z" id="Oval-7" fill-opacity="0.396484375" fill="#D8D8D8" sketch:type="MSShapeGroup"></path>
-            <ellipse id="Oval-1" stroke="#979797" fill="#199A51" filter="url(#filter-1)" sketch:type="MSShapeGroup" cx="45.36" cy="36.146875" rx="15.12" ry="15.13125"></ellipse>
-            <ellipse id="Oval-2" stroke="#979797" fill="#92CA61" filter="url(#filter-2)" sketch:type="MSShapeGroup" cx="45.36" cy="74.815625" rx="15.12" ry="15.13125"></ellipse>
-            <ellipse id="Oval-3" stroke="#979797" fill="#D8E58D" filter="url(#filter-3)" sketch:type="MSShapeGroup" cx="45.36" cy="113.484375" rx="15.12" ry="15.13125"></ellipse>
-            <ellipse id="Oval-4" stroke="#979797" fill="#FCE08A" filter="url(#filter-4)" sketch:type="MSShapeGroup" cx="45.36" cy="152.153125" rx="15.12" ry="15.13125"></ellipse>
-            <ellipse id="Oval-5" stroke="#979797" fill="#F68C5B" filter="url(#filter-5)" sketch:type="MSShapeGroup" cx="45.36" cy="190.821875" rx="15.12" ry="15.13125"></ellipse>
-            <ellipse id="Oval-6" stroke="#979797" fill="#D93027" filter="url(#filter-6)" sketch:type="MSShapeGroup" cx="45.36" cy="229.490625" rx="15.12" ry="15.13125"></ellipse>
-            <text id="Good" sketch:type="MSTextLayer" font-family="Calibri" font-size="16.6666667" font-weight="normal" fill="#444444">
-                <tspan x="80.64" y="40.378125">Good</tspan>
+        <g id="Color-Key" sketch:type="MSLayerGroup" transform="translate(-26.000000, -13.000000)">
+            <rect id="Rectangle-1" sketch:type="MSShapeGroup" x="0" y="0" width="210" height="323"></rect>
+            <path d="M29.5646899,288.657617 L29.5431589,288.657617 L29.5431589,32.781377 L29.6297417,32.781377 C29.5725024,32.178578 29.5431589,31.5666336 29.5431589,30.9471387 C29.5431589,21.3234313 36.6245999,13.521875 45.36,13.521875 C54.0954001,13.521875 61.1768411,21.3234313 61.1768411,30.9471387 C61.1768411,31.5666336 61.1474976,32.178578 61.0902583,32.781377 L61.0902583,32.781377 L61.1768411,32.781377 L61.1768411,288.657617 L61.1553101,288.657617 C61.169605,288.961331 61.1768411,289.267103 61.1768411,289.574736 C61.1768411,299.198444 54.0954001,307 45.36,307 C36.6245999,307 29.5431589,299.198444 29.5431589,289.574736 C29.5431589,289.267103 29.550395,288.961331 29.5646899,288.657617 Z" id="Oval-7" fill-opacity="0.396484375" fill="#D8D8D8" sketch:type="MSShapeGroup"></path>
+            <ellipse id="Oval-1" stroke="#979797" fill="#199A51" filter="url(#filter-1)" sketch:type="MSShapeGroup" cx="45.36" cy="47.146875" rx="15.12" ry="15.13125"></ellipse>
+            <ellipse id="Oval-2" stroke="#979797" fill="#92CA61" filter="url(#filter-2)" sketch:type="MSShapeGroup" cx="45.36" cy="85.815625" rx="15.12" ry="15.13125"></ellipse>
+            <ellipse id="Oval-3" stroke="#979797" fill="#D8E58D" filter="url(#filter-3)" sketch:type="MSShapeGroup" cx="45.36" cy="124.484375" rx="15.12" ry="15.13125"></ellipse>
+            <ellipse id="Oval-4" stroke="#979797" fill="#FCE08A" filter="url(#filter-4)" sketch:type="MSShapeGroup" cx="45.36" cy="163.153125" rx="15.12" ry="15.13125"></ellipse>
+            <ellipse id="Oval-5" stroke="#979797" fill="#F68C5B" filter="url(#filter-5)" sketch:type="MSShapeGroup" cx="45.36" cy="201.821875" rx="15.12" ry="15.13125"></ellipse>
+            <ellipse id="Oval-6" stroke="#979797" fill="#D93027" filter="url(#filter-6)" sketch:type="MSShapeGroup" cx="45.36" cy="240.490625" rx="15.12" ry="15.13125"></ellipse>
+            <ellipse id="Oval-7" stroke="#979797" fill="#4BB2FE" filter="url(#filter-7)" sketch:type="MSShapeGroup" cx="45.36" cy="279.159375" rx="15.12" ry="15.13125"></ellipse>
+            <text id="Good" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="51.378125">Good</tspan>
             </text>
-            <text id="Moderate" sketch:type="MSTextLayer" font-family="Calibri" font-size="16.6666667" font-weight="normal" fill="#444444">
-                <tspan x="80.64" y="79.046875">Moderate</tspan>
+            <text id="Moderate" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="90.046875">Moderate</tspan>
             </text>
-            <text id="Slightly-Elevated" sketch:type="MSTextLayer" font-family="Calibri" font-size="16.6666667" font-weight="normal" fill="#444444">
-                <tspan x="80.64" y="117.715625">Slightly Elevated</tspan>
+            <text id="Unhealthy-for-Sensit" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="118.978125">Unhealthy for </tspan>
+                <tspan x="80.64" y="137.978125">Sensitive Groups</tspan>
             </text>
-            <text id="Elevated" sketch:type="MSTextLayer" font-family="Calibri" font-size="16.6666667" font-weight="normal" fill="#444444">
-                <tspan x="80.64" y="156.384375">Elevated</tspan>
+            <text id="Unhealthy" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="165.384375">Unhealthy</tspan>
             </text>
-            <text id="High" sketch:type="MSTextLayer" font-family="Calibri" font-size="16.6666667" font-weight="normal" fill="#444444">
-                <tspan x="80.64" y="195.053125">High</tspan>
+            <text id="Very-Unhealthy" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="206.053125">Very Unhealthy</tspan>
             </text>
-            <text id="Very-High" sketch:type="MSTextLayer" font-family="Calibri" font-size="16.6666667" font-weight="normal" fill="#444444">
-                <tspan x="80.64" y="233.721875">Very High</tspan>
+            <text id="Hazardous" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="244.221875">Hazardous</tspan>
+            </text>
+            <text id="Current-Location" sketch:type="MSTextLayer" font-family="Calibri" font-size="16" font-weight="normal" fill="#444444">
+                <tspan x="80.64" y="283.390625">Current Location</tspan>
             </text>
         </g>
     </g>

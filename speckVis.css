@@ -3,7 +3,7 @@
   background-color: #fdfdfd;
   top:20px;  /* adjust value accordingly */
   left: 20px;  /* adjust value accordingly */
-  height: 420px;
+  height: 480px;
   width: 280px;
   box-shadow: 2px 2px 2px #888888;
 }
@@ -14,12 +14,13 @@
 }
 
 #colorKey img{
-	margin-left: 40px;
-	margin-top: 25px;
+	margin-left: 50px;
+	margin-top: 15px;
 }
 
 #locationBar {
 	margin-left: 20px;
+	margin-bottom: 0px;
 }
 
 #location {
@@ -30,4 +31,16 @@
 .btn {
 	float: right;
 	margin-right: 15px;
+}
+
+#OZONE {
+	color: #000;
+	background-color: #fff;
+	border-color: #4cae4c;
+}
+
+#PM 2.5 {
+	color: #fff;
+	background-color: #4cae4c;
+	border-color: #4cae4c;
 }
