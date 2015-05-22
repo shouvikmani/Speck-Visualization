@@ -3,19 +3,29 @@
   background-color: #fdfdfd;
   top:20px;  /* adjust value accordingly */
   left: 20px;  /* adjust value accordingly */
-  height: 480px;
+  height: 550px;
   width: 280px;
   box-shadow: 2px 2px 2px #888888;
 }
 
+#progressbar {
+	position: absolute;
+	display: block;
+	margin-left: 40%;
+	top: 30%;
+	width: 280px;
+}
+
 .lead {
 	margin-top: 10px;
+	margin-bottom: 10px;
 	text-align: center;
 }
 
 #colorKey img{
 	margin-left: 50px;
 	margin-top: 15px;
+	margin-bottom: 12px;
 }
 
 #locationBar {
@@ -28,9 +38,13 @@
 	float: left;
 }
 
-.btn {
+#goButton, .channelButton{
 	float: right;
 	margin-right: 15px;
+}
+
+#timeButton, #currentTimeButton {
+	margin-top: 10px;
 }
 
 #OZONE {
@@ -43,4 +57,75 @@
 	color: #fff;
 	background-color: #4cae4c;
 	border-color: #4cae4c;
+}
+
+.dropdown {
+	float: right;
+	margin-right: 15px;
+}
+
+.keyTimelineButton {
+	float: right;
+	margin-right: 15px;
+}
+
+.key {
+	color: #fff;
+	background-color: #4cae4c;
+	border-color: #4cae4c;
+}
+
+.timeline {
+	color: #000;
+	background-color: #fff;
+	border-color: #4cae4c;
+}
+
+#timelineForm {
+	margin-left: 20px;
+	margin-bottom: 0px;
+}
+
+#datepicker {
+	width: 155px;
+}
+
+#hourInput {
+	width: 43px;
+	float: left;
+}
+
+#minuteInput {
+	width: 43px;
+	float: left;
+}
+
+.colon {
+	float: left;
+	width: 8px;
+	margin-left: 2px;
+	font-size: 20px;
+	color: #666;
+}
+
+#AMPM {
+	margin-left: 6px;
+	width: 54px;
+	float: left;
+}
+
+.ui-datepicker {
+	font-size: 12px;
+}
+
+.progress-label {
+	position: absolute;
+	top: 4px;
+	left: 100px;
+	text-shadow: 1px 1px 0 #fff;
+}
+
+.helpLink {
+	float: left;
+	margin-left: 20px;
 }
